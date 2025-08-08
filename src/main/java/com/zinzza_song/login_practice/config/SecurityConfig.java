@@ -18,8 +18,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable) // 로그인 페이지 비활성화
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/api/public/**").permitAll() // 공개 API
-                        .requestMatchers("/api/private/**").authenticated() // 인증 요구
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/private/**").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll() // 회원가입
                         .anyRequest().denyAll()); // 기본 인증(JWT로 대체)
 
         return http.build();
