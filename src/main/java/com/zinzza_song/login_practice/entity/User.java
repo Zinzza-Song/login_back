@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+// User 테이블을 위한 Entity
 @Entity
 @Getter
 @Setter

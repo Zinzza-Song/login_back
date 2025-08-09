@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// 회원 가입할 때 쓰일 DTO
+// 로그인 때 쓰일 DTO
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDTO {
+@NoArgsConstructor
+public class LoginRequestDTO {
     private String username;
     private String password;
 }
