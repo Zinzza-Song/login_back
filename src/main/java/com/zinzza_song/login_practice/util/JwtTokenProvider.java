@@ -12,7 +12,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 토큰 키값을 랜덤하게 설정
-    private final long expiration = 1000L * 60 * 60; // 만료 시간 1시간으로 설정
 
     /**
      * 토큰 생성
@@ -21,6 +20,8 @@ public class JwtTokenProvider {
      * @return 인증 토큰 생성
      */
     public String generateToken(String username) {
+        // 만료 시간 1시간으로 설정
+        long expiration = 1000L * 60 * 60;
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
