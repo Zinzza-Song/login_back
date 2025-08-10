@@ -14,18 +14,35 @@ public class JwtTokenProvider {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 토큰 키값을 랜덤하게 설정
 
     /**
-     * 토큰 생성
-     * 
-     * @param username 로그인을 시도한 user의 ID
-     * @return 인증 토큰 생성
+     * Access 토큰 생성
+     *
+     * @param username 로그인 및 토큰을 재발급 받을 user의 ID
+     * @return Access 토큰 생성
      */
-    public String generateToken(String username) {
-        // 만료 시간 1시간으로 설정
-        long expiration = 1000L * 60 * 60;
+    public String generateAccessToken(String username) {
+        long expiration_30m = 1000L * 60 * 60;
+
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration_30m))
+                .signWith(key)
+                .compact();
+    }
+
+    /**
+     * Refresh 토큰 생성
+     *
+     * @param username 로그인 및 Refresh 토큰을 재발급 받을 user의 ID
+     * @return Refresh 토큰 생성
+     */
+    public String generateRefreshToken(String username) {
+        long expiration_7d = 1000L * 60 * 60 * 24 * 7;
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration_7d))
                 .signWith(key)
                 .compact();
     }
@@ -39,8 +56,6 @@ public class JwtTokenProvider {
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
-
-    // 토큰 유효성 검사
 
     /**
      * 토큰의 유효성 검사

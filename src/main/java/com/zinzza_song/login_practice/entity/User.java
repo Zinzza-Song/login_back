@@ -1,9 +1,6 @@
 package com.zinzza_song.login_practice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 // User 테이블을 위한 Entity
@@ -18,9 +15,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username; // id
 
+    @Column(nullable = false)
     private String password; // 비밀번호
 
     private String role; // 권한
+
+    @Column(length = 500)
+    private String refreshToken;
 }
