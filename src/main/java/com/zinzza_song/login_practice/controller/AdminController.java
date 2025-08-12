@@ -2,7 +2,6 @@ package com.zinzza_song.login_practice.controller;
 
 import com.zinzza_song.login_practice.entity.User;
 import com.zinzza_song.login_practice.repository.UserRepository;
-import com.zinzza_song.login_practice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private final UserService userService;
     private final UserRepository userRepository;
 
     /**
