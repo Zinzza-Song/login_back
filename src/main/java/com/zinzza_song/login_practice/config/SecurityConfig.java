@@ -23,7 +23,8 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/auth/**").permitAll() // 회원 가입, 로그인, 로그아웃, 토큰 재발급
-                        .requestMatchers("/api/private/**").authenticated()
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/api/private/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().denyAll())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 필터 추가
 

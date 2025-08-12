@@ -45,6 +45,7 @@ public class UserController {
 
     /**
      * 토큰 재발급
+     *
      * @param refreshToken 기간이 만료된 Refresh 토큰
      * @return 재발급 성공시 새로운 Access 토큰과 Refresh 토큰을 지닌 로그인 응답 DTO 객체를 반환
      */

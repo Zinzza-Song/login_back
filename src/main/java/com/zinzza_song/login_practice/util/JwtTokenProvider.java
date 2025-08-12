@@ -59,6 +59,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰의 유효성 검사
+     *
      * @param token 유효성 검사를 할 토큰
      * @return 유효성 검사에 통과 되면 true 값을 반환 실패 하면 false 값을 반환
      */
