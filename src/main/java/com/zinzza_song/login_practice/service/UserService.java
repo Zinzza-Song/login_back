@@ -49,7 +49,7 @@ public class UserService {
         if(!passwordEncoder.matches(dto.getPassword(), user.getPassword()))
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
 
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername(), user.getRole());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
 
         user.setRefreshToken(refreshToken);

@@ -17,13 +17,15 @@ public class JwtTokenProvider {
      * Access 토큰 생성
      *
      * @param username 로그인 및 토큰을 재발급 받을 user의 ID
+     * @param role 로그인을 시도하는 user의 권한
      * @return Access 토큰 생성
      */
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String username, String role) {
         long expiration_30m = 1000L * 60 * 60;
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration_30m))
                 .signWith(key)

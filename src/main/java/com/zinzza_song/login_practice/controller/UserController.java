@@ -83,7 +83,7 @@ public class UserController {
         if(!refreshToken.equals(user.getRefreshToken()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("서버에 저장된 refresh 토큰과 다릅니다.");
 
-        String newAccessToken = jwtTokenProvider.generateAccessToken(username);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(username, user.getRole());
 
         return ResponseEntity.ok(new LoginResponseDTO(newAccessToken, null));
     }
