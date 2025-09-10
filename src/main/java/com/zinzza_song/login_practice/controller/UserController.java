@@ -11,7 +11,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,26 +68,43 @@ public class UserController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest req) {
         String refreshToken = null;
-        if(req.getCookies() != null) {
-            for(Cookie cookie : req.getCookies()) {
-                if(cookie.getName().equals("refreshToken")) refreshToken = cookie.getValue();
+        if (req.getCookies() != null) {
+            for (Cookie cookie : req.getCookies()) {
+                if (cookie.getName().equals("refreshToken")) refreshToken = cookie.getValue();
             }
         }
 
-        if(refreshToken == null || !jwtTokenProvider.validateToken(refreshToken))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 refresh 토큰 입니다.");
+        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 refresh 토큰입니다.");
+        }
 
         String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
-        User user = userRepository
-                .findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
 
-        if(!refreshToken.equals(user.getRefreshToken()))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("서버에 저장된 refresh 토큰과 다릅니다.");
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("서버 저장 refresh 토큰과 불일치");
+        }
 
+        // Access & Refresh Token 새로 발급
         String newAccessToken = jwtTokenProvider.generateAccessToken(username, user.getRole());
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(username);
 
-        return ResponseEntity.ok(new LoginResponseDTO(newAccessToken, null));
+        user.setRefreshToken(newRefreshToken);
+        userRepository.save(user);
+
+        // HttpOnly 쿠키로 Refresh Token 전달
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
+                .httpOnly(true)
+                .secure(false)   // 개발환경이라면 false, 배포 시 true
+                .sameSite("Lax") // 중요!
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new LoginResponseDTO(newAccessToken, null));
     }
 
     /**

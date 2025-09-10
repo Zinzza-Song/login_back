@@ -2,16 +2,27 @@ package com.zinzza_song.login_practice.util;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 토큰 키값을 랜덤하게 설정
+    private Key key; // 토큰 키값을 랜덤하게 설정
+
+    @Value("${jwt.secret.key}")
+    private String secret;
+
+    @PostConstruct
+    public void init(){
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     /**
      * Access 토큰 생성
@@ -21,7 +32,7 @@ public class JwtTokenProvider {
      * @return Access 토큰 생성
      */
     public String generateAccessToken(String username, String role) {
-        long expiration_30m = 1000L * 60 * 60;
+        long expiration_30m = 1000L * 60;
 
         return Jwts.builder()
                 .setSubject(username)
