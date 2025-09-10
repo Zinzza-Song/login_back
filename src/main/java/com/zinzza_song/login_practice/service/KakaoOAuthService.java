@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -89,7 +90,7 @@ public class KakaoOAuthService {
         }
 
         String email = (String) kakaoAccount.get("email");
-        String username = "kakao_" + userInfoBody.get("id");
+        String username = "kakao_" + Objects.requireNonNull(userInfoBody).get("id");
 
         System.out.println("username: " + username);
         System.out.println("mail: " + email);
