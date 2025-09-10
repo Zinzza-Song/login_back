@@ -26,9 +26,8 @@ public class User {
     @Column(length = 500)
     private String refreshToken;
 
-    public User(String username, String password, String roleUser) {
+    public User(String username, String roleUser) {
         this.username = username;
         this.role = roleUser;
-
     }
 }

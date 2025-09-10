@@ -68,7 +68,7 @@ public class KakaoOAuthService {
 
         User user = userRepository.findByUsername(username)
                 .orElseGet(() -> {
-                   User newUser = new User(username, null, "ROLE_USER");
+                   User newUser = new User(username, "ROLE_USER");
 
                    return userRepository.save(newUser);
                 });
