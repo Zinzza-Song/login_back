@@ -32,7 +32,7 @@ public class JwtTokenProvider {
      * @return Access 토큰 생성
      */
     public String generateAccessToken(String username, String role) {
-        long expiration_30m = 1000L * 60;
+        long expiration_30m = 1000L * 60 * 30;
 
         return Jwts.builder()
                 .setSubject(username)
