@@ -139,6 +139,13 @@ public class UserController {
         return ResponseEntity.ok("logout-success");
     }
 
+    /**
+     * 카카오 소셜 로그인
+     *
+     * @param body 클라이언트로 부터 받은 JSON 데이터를 Map으로 변환한 객체
+     * @param res 응답처리를 위한 응답 객체
+     * @return LoginResponseDTO 객체를 클라이어트에 응답으로 보냄
+     */
     @PostMapping("/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> body, HttpServletResponse res) {
         String code = body.get("code");
