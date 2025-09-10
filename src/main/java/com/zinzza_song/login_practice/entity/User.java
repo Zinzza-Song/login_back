@@ -18,11 +18,17 @@ public class User {
     @Column(nullable = false)
     private String username; // id
 
-    @Column(nullable = false)
     private String password; // 비밀번호
 
+    @Column(nullable = false)
     private String role; // 권한
 
     @Column(length = 500)
     private String refreshToken;
+
+    public User(String username, String password, String roleUser) {
+        this.username = username;
+        this.role = roleUser;
+
+    }
 }

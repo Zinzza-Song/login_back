@@ -5,6 +5,7 @@ import com.zinzza_song.login_practice.dto.LoginResponseDTO;
 import com.zinzza_song.login_practice.dto.UserRequestDTO;
 import com.zinzza_song.login_practice.entity.User;
 import com.zinzza_song.login_practice.repository.UserRepository;
+import com.zinzza_song.login_practice.service.KakaoOAuthService;
 import com.zinzza_song.login_practice.service.UserService;
 import com.zinzza_song.login_practice.util.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth") // http://localhost:8080/api/auth/**
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final KakaoOAuthService kakaoOAuthService;
 
     /**
      * 회원 가입
@@ -133,5 +137,13 @@ public class UserController {
         res.addCookie(refreshCookie);
 
         return ResponseEntity.ok("logout-success");
+    }
+
+    @PostMapping("/kakao")
+    public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> body, HttpServletResponse res) {
+        String code = body.get("code");
+        LoginResponseDTO tokens = kakaoOAuthService.kakaoLogin(code, res);
+
+        return ResponseEntity.ok(tokens);
     }
 }
